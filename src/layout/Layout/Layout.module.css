@@ -61,6 +61,11 @@
   color: var(--primary-hover-color);
 }
 
+.main-layout__right {
+  padding: 39px 60px;
+  width: 100%;
+}
+
 .active {
   color: var(--primary-hover-color);
 }
