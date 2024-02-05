@@ -8,6 +8,8 @@ import Error from './pages/Error/Error';
 import Layout from './layout/Layout/Layout.tsx';
 import Product from './pages/Product/Product.tsx';
 import './index.css';
+import axios from '../node_modules/axios/index';
+import { PREFIX } from './api/api';
 
 const router = createBrowserRouter([
   // массив объектов, который описывает наши роуты
@@ -27,6 +29,20 @@ const router = createBrowserRouter([
       {
         path: '/product/:id', // параметрический роут
         element: <Product />,
+        loader: async ({ params }) => {
+          // имитация задержки
+          await new Promise<void>((resolve) => {
+            // void ничего не передаем
+            setTimeout(() => {
+              resolve();
+            }, 2000);
+          });
+
+          // с помощью params можем получить :id, тоесть params.id
+          // loader - функция которая говорит, а как нам загрузить данные перед тем, как загрузить продукт
+          const { data } = await axios.get(`${PREFIX}/products/${params.id}`);
+          return data;
+        },
       },
     ],
   },
