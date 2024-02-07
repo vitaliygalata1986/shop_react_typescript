@@ -1,6 +1,5 @@
 import Headling from '../../components/Headling/Headling';
 import Search from '../../components/Search/Search';
-import ProductCard from '../../components/ProductCard/ProductCard';
 import styles from './Menu.module.css';
 import { PREFIX } from '../../api/api';
 import { Product } from '../../interfaces/product.interface';
