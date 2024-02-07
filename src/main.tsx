@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter, defer } from 'react-router-dom';
 // import Menu from './pages/Menu/Menu';
 import Cart from './pages/Cart/Cart';
 import { Error as ErrorPage } from './pages/Error/Error';
@@ -29,6 +29,10 @@ const router = createBrowserRouter([
         ),
         // Suspense позволяет создать временный обработчик, пока наш компонент загружается
         // благодаря Suspense компонент Menu будет загружен тогда, когда с нми будет взаимодействие
+        // после бандла наше приложение будет разбито на различные js файлы
+        // вобщем технология Suspense используется для ленивой загрузки компонента
+        // даже для API запросов
+        // loader больше всего птходит для того, чтобы данные загрузить в зависимости от params: path: '/product/:id'
       },
       {
         path: '/cart',
@@ -37,9 +41,34 @@ const router = createBrowserRouter([
       {
         path: '/product/:id', // параметрический роут
         element: <Product />,
-        errorElement: <>Error</>, // в случае ошибки подменяет элемент (можем передать компонент), ошибка будет тригериться, если кто-то в loader кидает ошибку (в нашем случае axios выкидывает вверх ошибку)
+        errorElement: <>Error Ошибка</>, // в случае ошибки подменяет элемент (можем передать компонент), ошибка будет тригериться, если кто-то в loader кидает ошибку (в нашем случае axios выкидывает вверх ошибку)
         loader: async ({ params }) => {
+          // обработаем состояние загрузки
+          // defer позволяет обеспечить реализацию некого API отложенной загрузки с помощью Suspense
+
+          /*
+          return defer({
+            data: new Promise((resolve, reject) => {
+              setTimeout(() => {
+                axios
+                  .get(`${PREFIX}/productsd/${params.id}`)
+                  .then((data) => resolve(data))
+                  .catch((e) => reject(e));
+              }, 2000);
+            }),
+          });
+          */
+
+          return defer({
+            // вовзращаем промис, тоесть получили результирующие данные
+            // defer оборачивает данные, которые сами по себе являются асинхронными
+            data: await axios
+              .get(`${PREFIX}/products/${params.id}`)
+              .then((data) => data), // первый элемент нашего defer, который возвращается из промиса
+          });
+
           // имитация задержки
+          /*
           await new Promise<void>((resolve) => {
             // void ничего не передаем
             setTimeout(() => {
@@ -51,6 +80,7 @@ const router = createBrowserRouter([
           // loader - функция которая говорит, а как нам загрузить данные перед тем, как загрузить продукт
           const { data } = await axios.get(`${PREFIX}/products/${params.id}`);
           return data;
+          */
         },
       },
     ],
