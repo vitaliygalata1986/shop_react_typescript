@@ -1,11 +1,13 @@
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter, defer } from 'react-router-dom';
-// import Menu from './pages/Menu/Menu';
 import Cart from './pages/Cart/Cart';
+import AuthLayout from './layout/Auth/AuthLayout';
+import MenuLayout from './layout/MenuLayout/MenuLayout';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import Product from './pages/Product/Product';
 import { Error as ErrorPage } from './pages/Error/Error';
-import Layout from './layout/Layout/Layout.tsx';
-import Product from './pages/Product/Product.tsx';
 import './index.css';
 import axios from '../node_modules/axios/index';
 import { PREFIX } from './api/api';
@@ -17,7 +19,7 @@ const router = createBrowserRouter([
   // массив объектов, который описывает наши роуты
   {
     path: '/',
-    element: <Layout />,
+    element: <MenuLayout />,
     children: [
       // дочерние роуты
       {
@@ -82,6 +84,21 @@ const router = createBrowserRouter([
           return data;
           */
         },
+      },
+    ],
+  },
+  {
+    path: '/auth',
+    element: <AuthLayout />,
+    children: [
+      {
+        path: 'login',
+        element: <Login />,
+      },
+
+      {
+        path: 'register',
+        element: <Register />,
       },
     ],
   },
