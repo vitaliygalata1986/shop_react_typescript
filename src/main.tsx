@@ -11,6 +11,7 @@ import { Error as ErrorPage } from './pages/Error/Error';
 import './index.css';
 import axios from '../node_modules/axios/index';
 import { PREFIX } from './api/api';
+import RequireAuth from './helpers/RequireAuth';
 
 // функция lazy должна импортировать наш компонент
 const Menu = lazy(() => import('./pages/Menu/Menu')); // теперь в Menu будет храниться lazy компонент Menu, который будет загружаться не сразу
@@ -19,7 +20,11 @@ const router = createBrowserRouter([
   // массив объектов, который описывает наши роуты
   {
     path: '/',
-    element: <MenuLayout />,
+    element: (
+      <RequireAuth>
+        <MenuLayout />
+      </RequireAuth>
+    ),
     children: [
       // дочерние роуты
       {
