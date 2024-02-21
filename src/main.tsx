@@ -12,6 +12,8 @@ import './index.css';
 import axios from '../node_modules/axios/index';
 import { PREFIX } from './api/api';
 import RequireAuth from './helpers/RequireAuth';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 // функция lazy должна импортировать наш компонент
 const Menu = lazy(() => import('./pages/Menu/Menu')); // теперь в Menu будет храниться lazy компонент Menu, который будет загружаться не сразу
@@ -116,6 +118,8 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     {/* Передаем объект, созданный в createBrowserRouter в провайдер: */}
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
