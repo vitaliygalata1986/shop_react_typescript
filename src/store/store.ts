@@ -1,7 +1,8 @@
 // сконфигурирем наш store
 
 import { configureStore } from '@reduxjs/toolkit';
-import userSlice from './user.slice';
+import userSlice, { JWT_PERSISTENT_STATE } from './user.slice';
+import { saveState } from './storage';
 
 export const store = configureStore({
   // будем подключать все наши доступные reducer
@@ -12,6 +13,11 @@ export const store = configureStore({
   reducer: {
     user: userSlice, // подключим редюсер userSlice
   },
+});
+
+store.subscribe(() => {
+  // получаем состояние JWT и его сохраняем
+  saveState({ jwt: store.getState().user.jwt }, JWT_PERSISTENT_STATE);
 });
 
 // также нам дополнительно потребуется типизация, чтобы правильно вывести store
